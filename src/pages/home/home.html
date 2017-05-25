@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar color="secondary">
+    <ion-title>
+      Todos!
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addItem()"><ion-icon name="add-circle"></ion-icon></button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+  </ion-list>
+  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+  <ion-item-divider light>Pendientes</ion-item-divider>
+  <ion-list reorder="true" (ionItemReorder)="reorderItems($event)">
+    <ion-item-sliding *ngFor="let item of pendingItems; let i = index;">
+      <ion-item>
+        <ion-label>{{i+1}}. {{item.description}}</ion-label>
+        <ion-checkbox [(ngModel)]="item.checked" (click)="isChecked(item);"></ion-checkbox>
+        <ion-note item-right>
+          <ion-icon ios="ios-swap" md="md-swap" item-right></ion-icon>
+        </ion-note>
+      </ion-item>
+      <ion-item-options>
+        <button class="icon-circle-swipe-button" ion-button color="light">
+          <ion-icon ios="ios-eye" md="md-eye" (click)="viewItem(item)"></ion-icon>
+        </button>
+        <button class="icon-circle-swipe-button" ion-button color="light">
+          <ion-icon ios="ios-trash" md="md-trash" (click)="deleteItem(item)" item-right></ion-icon>
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <ion-item-divider light>Completados</ion-item-divider>
+  <ion-item *ngFor="let item of completedItems">{{item.description}}</ion-item>
+</ion-content>
