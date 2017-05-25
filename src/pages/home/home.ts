@@ -75,7 +75,7 @@ export class HomePage {
   isChecked(item) {
     console.log(item);
     if (item.checked) {
-      item.status = "completed";
+      item.status = "Completedo";
 
         this.todoService.updateTodo(item)
             .then(data => {
@@ -108,7 +108,7 @@ export class HomePage {
         {
           text: 'Añadir',
           handler: data => {
-            data.status = 'pending';
+            data.status = 'Pendiente';
 
               this.todoService.addTodo(data)
                   .then(result => {
@@ -138,7 +138,6 @@ export class HomePage {
           name: 'description',
           placeholder: 'Descripción',
           value: item.description
-
         },
         {
           name: 'priority',

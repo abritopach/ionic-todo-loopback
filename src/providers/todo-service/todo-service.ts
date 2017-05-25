@@ -59,7 +59,11 @@ export class TodoServiceProvider {
             // and save the data for later reference
             //console.log(data);
             this.data = data;
-            resolve(this.data);
+
+              // Sort todos array by priority.
+              this.data = this.data.sort((a, b) => a.priority - b.priority);
+
+              resolve(this.data);
           },
               err => {
             console.log("ERROR -> " + JSON.stringify(err));
