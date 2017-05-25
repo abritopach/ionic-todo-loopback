@@ -88,19 +88,9 @@ export class HomePage {
 
   addItem() {
 
-    let taskIndex = 1;
-    if (this.pendingItems.length != 0) {
-      taskIndex = this.pendingItems.length + 1;
-    }
-
     let prompt = this.alertCtrl.create({
       title: 'Añadir tarea',
       inputs: [
-        {
-          name: 'id',
-          placeholder: 'ID',
-          value: 'Task ' + taskIndex,
-        },
         {
           name: 'description',
           placeholder: 'Descripción',
@@ -109,7 +99,6 @@ export class HomePage {
           name: 'priority',
           placeholder: 'Prioridad',
           type: 'number',
-
         }
       ],
       buttons: [
@@ -120,7 +109,12 @@ export class HomePage {
           text: 'Añadir',
           handler: data => {
             data.status = 'pending';
-            this.pendingItems.push(data);
+
+              this.todoService.addTodo(data)
+                  .then(result => {
+                      //console.log(result);
+                      this.pendingItems.push(result);
+                  });
           }
         }
       ]
