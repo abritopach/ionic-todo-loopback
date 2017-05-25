@@ -24,11 +24,14 @@
         </ion-note>
       </ion-item>
       <ion-item-options>
-        <button class="icon-circle-swipe-button" ion-button color="light">
-          <ion-icon ios="ios-eye" md="md-eye" (click)="viewItem(item)"></ion-icon>
+        <button ion-button color="light" (click)="viewItem(item)">
+          <ion-icon ios="ios-eye" md="md-eye"></ion-icon>
         </button>
-        <button class="icon-circle-swipe-button" ion-button color="light">
-          <ion-icon ios="ios-trash" md="md-trash" (click)="deleteItem(item)" item-right></ion-icon>
+        <button ion-button color="light" (click)="updateItem(item)">
+          <ion-icon ios="ios-create" md="md-create"></ion-icon>
+        </button>
+        <button ion-button color="light" (click)="deleteItem(item)">
+          <ion-icon ios="ios-trash" md="md-trash" item-right></ion-icon>
         </button>
       </ion-item-options>
     </ion-item-sliding>

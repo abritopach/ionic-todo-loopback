@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController, reorderArray } from 'ionic-angular';
-import { TodoServiceProvider } from '../../providers/todo-service/todo-service'
+import { TodoServiceProvider } from '../../providers/todo-service/todo-service';
+
+import * as moment from 'moment';
 
 @Component({
   selector: 'page-home',
@@ -35,7 +37,7 @@ export class HomePage {
 
       this.todoService.getTodos()
           .then(data => {
-              console.log(data);
+              //console.log(data);
               this.data = data;
               for (var i = 0; i < this.data.length; i++) {
                 if (this.data[i].status == "Pendiente") this.pendingItems.push(data[i]);
@@ -63,12 +65,21 @@ export class HomePage {
   }
 
   reorderItems(indexes) {
-    console.log(indexes);
+    //console.log(indexes);
     let currentPriority = this.pendingItems[indexes.from].priority;
     let newPriority = this.pendingItems[indexes.to].priority;
     this.pendingItems = reorderArray(this.pendingItems, indexes);
     this.pendingItems[indexes.to].priority = newPriority;
+      this.todoService.updateTodo(this.pendingItems[indexes.to])
+          .then(data => {
+              //console.log(data);
+          });
+
     this.pendingItems[indexes.from].priority = currentPriority;
+      this.todoService.updateTodo(this.pendingItems[indexes.from])
+          .then(data => {
+              //console.log(data);
+          });
 
   }
 
@@ -114,6 +125,10 @@ export class HomePage {
                   .then(result => {
                       //console.log(result);
                       this.pendingItems.push(result);
+
+                      // Sort todos array by priority.
+                      this.pendingItems = this.pendingItems.sort((a, b) => a.priority - b.priority);
+
                   });
           }
         }
@@ -122,6 +137,54 @@ export class HomePage {
 
     prompt.present();
   }
+
+    updateItem(item) {
+
+        let prompt = this.alertCtrl.create({
+            title: 'Actualizar tarea',
+            inputs: [
+                {
+                    name: 'description',
+                    placeholder: 'Descripción',
+                    value: item.description
+                },
+                {
+                    name: 'priority',
+                    placeholder: 'Prioridad',
+                    type: 'number',
+                    value: item.priority
+                }
+            ],
+            buttons: [
+                {
+                    text: 'Cancelar'
+                },
+                {
+                    text: 'Actualizar',
+                    handler: data => {
+
+                        let index = this.pendingItems.indexOf(item);
+
+                        if(index > -1) {
+
+                            if (data.description != '') this.pendingItems[index].description = data.description;
+                            if (data.priority != '') this.pendingItems[index].priority = data.priority;
+
+                            this.todoService.updateTodo(this.pendingItems[index])
+                                .then(data => {
+                                    //console.log(data);
+
+                                    // Sort todos array by priority.
+                                    this.pendingItems = this.pendingItems.sort((a, b) => a.priority - b.priority);
+                                });
+                        }
+                    }
+                }
+            ]
+        });
+
+        prompt.present();
+    }
 
   viewItem(item) {
 
@@ -155,7 +218,7 @@ export class HomePage {
           {
               name: 'created',
               placeholder: 'Fecha creación',
-              value: item.created
+              value: moment(item.created).format("DD/MM/YYYY HH:mm:ss")
 
           }
       ]
