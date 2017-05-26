@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, reorderArray } from 'ionic-angular';
+import { Platform, NavController, AlertController, reorderArray } from 'ionic-angular';
 import { TodoServiceProvider } from '../../providers/todo-service/todo-service';
-
+// Import SocialSharing plugin.
+import { SocialSharing } from '@ionic-native/social-sharing';
 import * as moment from 'moment';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers: [TodoServiceProvider]
+  providers: [TodoServiceProvider, SocialSharing]
 })
 export class HomePage {
 
@@ -16,7 +17,8 @@ export class HomePage {
   completedItems: any;
   checked: any[];
 
-    constructor(public navCtrl: NavController, public alertCtrl: AlertController, public todoService: TodoServiceProvider) {
+    constructor(public navCtrl: NavController, public alertCtrl: AlertController, public todoService: TodoServiceProvider,
+                public platform: Platform, private socialSharing: SocialSharing) {
 
         this.pendingItems = [];
         this.completedItems = [];
@@ -241,5 +243,56 @@ export class HomePage {
             });
     }
   }
+
+    formatText() : string {
+        var header = "Tareas pendientes" + "\n" +
+            "--------------------\n"
+        var body = "";
+        for (var i = 0; i < this.pendingItems.length; i++) {
+            var index = i + 1;
+            body = body + index + ". " + "[Prioridad: " + this.pendingItems[i].priority + "] " + this.pendingItems[i].description + "\n";
+        }
+        var footer = "--------------------\n";
+        var text = header + body + footer;
+        return text;
+    }
+
+
+    whatsappShare() {
+        if(this.platform.is('core') || this.platform.is('mobileweb')) {
+            alert("Sólo puedes compartir en un dispositivo móvil.");
+        }
+        else {
+            this.platform.ready().then(() => {
+                this.socialSharing.shareViaWhatsApp(this.formatText(), null /*Image*/,  "https://google.com/" /* url */)
+                    .then(() => {
+                        //alert("Success");
+                    }).catch(() => {
+                        // Error!
+                        alert("Failed");
+                    });
+            });
+        }
+    }
+
+    emailShare() {
+
+        if(this.platform.is('core') || this.platform.is('mobileweb')) {
+            var email = "someone@example.com?Subject=" + this.formatText();
+            window.open(`mailto:${email}`, '_system');
+        }
+        else {
+            this.platform.ready().then(() => {
+                // Share via email
+                this.socialSharing.shareViaEmail(this.formatText(), "Message via Todo's App", ["recipient@example.org"]).then(() => {
+                    //alert("Success");
+                    // Success!
+                }).catch(() => {
+                    // Error!
+                    alert("Failed");
+                });
+            });
+        }
+    }
 
 }
