@@ -21,10 +21,13 @@
     "@angular/platform-browser": "4.1.0",
     "@angular/platform-browser-dynamic": "4.1.0",
     "@ionic-native/core": "3.7.0",
+    "@ionic-native/file": "^3.10.3",
     "@ionic-native/social-sharing": "^3.10.3",
     "@ionic-native/splash-screen": "3.7.0",
     "@ionic-native/status-bar": "3.7.0",
     "@ionic/storage": "2.0.1",
+    "cordova-plugin-compat": "^1.1.0",
+    "cordova-plugin-file": "^4.3.3",
     "cordova-plugin-x-socialsharing": "^5.1.8",
     "es6-promise-plugin": "^4.1.0",
     "ionic-angular": "3.2.1",
@@ -59,7 +62,8 @@
   "description": "ionic-todo-list: An Ionic project",
   "cordova": {
     "plugins": {
-      "cordova-plugin-x-socialsharing": {}
+      "cordova-plugin-x-socialsharing": {},
+      "cordova-plugin-file": {}
     }
   }
 }

@@ -3,12 +3,15 @@ import { Platform, NavController, AlertController, reorderArray } from 'ionic-an
 import { TodoServiceProvider } from '../../providers/todo-service/todo-service';
 // Import SocialSharing plugin.
 import { SocialSharing } from '@ionic-native/social-sharing';
+// Import File plugin.
+import { File } from '@ionic-native/file';
 import * as moment from 'moment';
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers: [TodoServiceProvider, SocialSharing]
+  providers: [TodoServiceProvider, SocialSharing, File]
 })
 export class HomePage {
 
@@ -18,7 +21,7 @@ export class HomePage {
   checked: any[];
 
     constructor(public navCtrl: NavController, public alertCtrl: AlertController, public todoService: TodoServiceProvider,
-                public platform: Platform, private socialSharing: SocialSharing) {
+                public platform: Platform, private socialSharing: SocialSharing, public file: File) {
 
         this.pendingItems = [];
         this.completedItems = [];
@@ -293,6 +296,61 @@ export class HomePage {
                 });
             });
         }
+    }
+
+    convertToCSV(items) {
+        var csv: any = ''
+        var line: any = ''
+
+        // Header.
+        line = "Descripción,Prioridad,Estado,Fecha"
+        csv += line + '\r\n';
+
+        // Items.
+        for (var i = 0; i < items.length; i++) {
+            line = items[i].description + ',' + items[i].priority + ',' + items[i].status + ',' + items[i].created;
+            csv += line + '\r\n'
+        }
+
+        return csv
+    }
+
+    saveAsCsv() {
+        var csv: any = this.convertToCSV(this.pendingItems);
+        console.log(csv);
+
+
+        if(this.platform.is('core') || this.platform.is('mobileweb')) {
+            window.open("data:text/csv;charset=utf-8," + csv);
+        }
+        else {
+             var fileName: any = "tareas.csv";
+             this.file.writeFile(this.file.externalRootDirectory, fileName, csv, true)
+             .then(
+                _ => {
+                    alert('Success.');
+                }
+             )
+             .catch(
+                err => {
+                    this.file.writeExistingFile(this.file.externalRootDirectory, fileName, csv)
+                .then(
+                    _ => {
+                        alert('Success.');
+                    }
+                )
+                .catch(
+                    err => {
+                        alert('Failure.');
+                    }
+                )
+                }
+             )
+        }
+    }
+
+    download() {
+        this.saveAsCsv();
     }
 
 }
