@@ -61,6 +61,10 @@ export class ModalAddTask {
                         this.todoService.addTodo(this.task)
                             .then(data => {
                                 //console.log(data);
+                                this.todoService.addCategory2Todo(data, this.selectedCategories)
+                                    .then(data => {
+                                        console.log(data);
+                                    });
                                 loader.dismiss();
                                 this.viewCtrl.dismiss(data);
                             });
