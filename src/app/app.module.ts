@@ -9,10 +9,13 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { TodoServiceProvider } from '../providers/todo-service/todo-service';
 
+import { ModalAddTask } from '../pages/modals/modal-add-task/modal-add-task';
+
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    ModalAddTask
   ],
   imports: [
     BrowserModule,
@@ -22,7 +25,8 @@ import { TodoServiceProvider } from '../providers/todo-service/todo-service';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    ModalAddTask
   ],
   providers: [
     StatusBar,

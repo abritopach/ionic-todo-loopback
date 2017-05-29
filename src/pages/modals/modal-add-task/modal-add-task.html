@@ -1,0 +1,40 @@
+<ion-header>
+    <ion-toolbar color="secondary">
+        <ion-title>
+            Añadir tarea
+        </ion-title>
+        <ion-buttons start>
+            <button ion-button (click)="dismiss()">
+                <span ion-text showWhen="ios">Cancel</span>
+                <ion-icon name="md-close" color="light" showWhen="android,windows,core"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+        <ion-item-divider>
+            <ion-label>Descripción</ion-label>
+            <ion-input type="text" [(ngModel)]="task.description"></ion-input>
+        </ion-item-divider>
+
+        <ion-item-divider>
+            <ion-label>Prioridad</ion-label>
+            <ion-input type="number" min="1" max="10" [(ngModel)]="task.priority"></ion-input>
+        </ion-item-divider>
+
+        <ion-item-divider>
+            <ion-label>Categoría</ion-label>
+            <ion-select multiple="true" [(ngModel)]="task.categories">
+                <ion-option value="Seleccione" disabled="true">Seleccione...</ion-option>
+                <ion-option value="Hogar">Hogar</ion-option>
+                <ion-option value="Entretenimiento">Entretenimiento</ion-option>
+            </ion-select>
+        </ion-item-divider>
+
+        <ion-item>
+            <button color="secondary" ion-button (click)="addTask()">Aceptar</button>
+        </ion-item>
+    </ion-list>
+</ion-content>

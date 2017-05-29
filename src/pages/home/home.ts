@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Platform, NavController, AlertController, reorderArray } from 'ionic-angular';
+import { Platform, NavController, AlertController, reorderArray, ModalController } from 'ionic-angular';
 import { TodoServiceProvider } from '../../providers/todo-service/todo-service';
 // Import SocialSharing plugin.
 import { SocialSharing } from '@ionic-native/social-sharing';
@@ -7,6 +7,8 @@ import { SocialSharing } from '@ionic-native/social-sharing';
 import { File } from '@ionic-native/file';
 import * as moment from 'moment';
 import 'rxjs/add/operator/map';
+
+import { ModalAddTask } from '../modals/modal-add-task/modal-add-task';
 
 @Component({
   selector: 'page-home',
@@ -21,7 +23,8 @@ export class HomePage {
   checked: any[];
 
     constructor(public navCtrl: NavController, public alertCtrl: AlertController, public todoService: TodoServiceProvider,
-                public platform: Platform, private socialSharing: SocialSharing, public file: File) {
+                public platform: Platform, private socialSharing: SocialSharing, public file: File,
+                public modalCtrl: ModalController) {
 
         this.pendingItems = [];
         this.completedItems = [];
@@ -101,6 +104,12 @@ export class HomePage {
             });
     }
   }
+
+    addTask(event, item) {
+        console.log("showModal");
+        let modal = this.modalCtrl.create(ModalAddTask);
+        modal.present();
+    }
 
   addItem() {
 
