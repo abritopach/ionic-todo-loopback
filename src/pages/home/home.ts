@@ -105,12 +105,23 @@ export class HomePage {
     }
   }
 
-    addTask(event, item) {
+    addItem(event, item) {
         console.log("showModal");
         let modal = this.modalCtrl.create(ModalAddTask);
+        modal.onDidDismiss(data => {
+            //console.log(data);
+
+            if (data.description != "") {
+                this.pendingItems.push(data);
+                // Sort todos array by priority.
+                this.pendingItems = this.pendingItems.sort((a, b) => a.priority - b.priority);
+            }
+
+        });
         modal.present();
     }
 
+    /*
   addItem() {
 
     let prompt = this.alertCtrl.create({
@@ -151,6 +162,7 @@ export class HomePage {
 
     prompt.present();
   }
+  */
 
     updateItem(item) {
 

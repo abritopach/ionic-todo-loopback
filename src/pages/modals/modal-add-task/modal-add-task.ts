@@ -13,34 +13,27 @@ import { TodoServiceProvider } from '../../../providers/todo-service/todo-servic
 export class ModalAddTask {
 
     task: any;
+    categories: any;
+    selectedCategories: any;
     result: any;
 
     constructor(public params: NavParams, public viewCtrl: ViewController, public alertCtrl: AlertController,
                 public loadingCtrl: LoadingController, public todoService: TodoServiceProvider) {
 
-        this.task = {description: "", priority: 0, categories: "Selecciones"};
+        this.task = {description: "", priority: 0, status: "Pendiente"};
 
-        /*
-        this.creditCard = this.params.get('item');
+    }
 
-        if (this.creditCard.type == "credito") {
-            this.creditCard.liquidationPeriod.lower = this.creditCard.liquidationPeriod.start;
-            this.creditCard.liquidationPeriod.upper = this.creditCard.liquidationPeriod.end;
-        }
-        */
+    ionViewDidLoad() {
+        this.todoService.getCategories()
+            .then(data => {
+                //console.log(data);
+                this.categories = data;
+            });
     }
 
     dismiss() {
-        this.viewCtrl.dismiss();
-    }
-
-    showAlert(title: any, subTitle: any) {
-        let alert = this.alertCtrl.create({
-            title: title,
-            subTitle: subTitle,
-            buttons: ['OK']
-        });
-        alert.present();
+        this.viewCtrl.dismiss(this.task);
     }
 
     addTask() {
@@ -65,18 +58,12 @@ export class ModalAddTask {
                         });
                         loader.present();
 
-                        /*
-                        this.creditCardService.update(this.creditCard)
+                        this.todoService.addTodo(this.task)
                             .then(data => {
                                 //console.log(data);
-                                this.result = data;
-                                if (this.result.success == false) this.showAlert('ERROR', this.result.message);
-                                else {
-                                    this.showAlert('INFO', this.result.message);
-                                }
                                 loader.dismiss();
+                                this.viewCtrl.dismiss(data);
                             });
-                            */
                     }
                 }
             ]

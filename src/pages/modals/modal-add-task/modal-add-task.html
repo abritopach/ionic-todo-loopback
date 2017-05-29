@@ -26,10 +26,13 @@
 
         <ion-item-divider>
             <ion-label>Categoría</ion-label>
-            <ion-select multiple="true" [(ngModel)]="task.categories">
+            <ion-select multiple="true" [(ngModel)]="selectedCategories">
+                <ion-option *ngFor="let category of categories" [value]="category.name">{{category.name}}</ion-option>
+                <!--
                 <ion-option value="Seleccione" disabled="true">Seleccione...</ion-option>
                 <ion-option value="Hogar">Hogar</ion-option>
                 <ion-option value="Entretenimiento">Entretenimiento</ion-option>
+                -->
             </ion-select>
         </ion-item-divider>
 

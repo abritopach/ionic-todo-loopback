@@ -21,6 +21,8 @@ export class TodoServiceProvider {
     this.environment = new Environment("HEROKU");
   }
 
+    // TODOs methods.
+
     addTodo(item: any) {
         // don't have the data yet
         return new Promise(resolve => {
@@ -109,6 +111,35 @@ export class TodoServiceProvider {
                     // and save the data for later reference
                     //console.log(data);
                     this.data = data;
+                    resolve(this.data);
+                },
+                    err => {
+                    console.log("ERROR -> " + JSON.stringify(err));
+                });
+        });
+    }
+
+    // Categories methods.
+
+    getCategories() {
+        // don't have the data yet
+        return new Promise(resolve => {
+
+
+            // We're using Angular HTTP provider to request the data,
+            // then on the response, it'll map the JSON data to a parsed JS object.
+            // Next, we process the data and resolve the promise with the new data.
+            this.http.get(this.environment.getURL() + 'api/categories')
+                .map(res => res.json())
+                .subscribe(data => {
+                    // we've got back the raw data, now generate the core schedule data
+                    // and save the data for later reference
+                    //console.log(data);
+                    this.data = data;
+
+                    // Sort todos array by priority.
+                    this.data = this.data.sort((a, b) => a.priority - b.priority);
+
                     resolve(this.data);
                 },
                     err => {
