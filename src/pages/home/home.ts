@@ -100,7 +100,10 @@ export class HomePage {
             .then(data => {
                 console.log(data);
                 this.completedItems.push(data);
-                this.deleteItem(item);
+
+                let index = this.pendingItems.indexOf(item);
+
+                if(index > -1) this.pendingItems.splice(index, 1);
             });
     }
   }
@@ -214,43 +217,65 @@ export class HomePage {
 
   viewItem(item) {
 
-    let prompt = this.alertCtrl.create({
-      title: 'Detalles tarea',
-      inputs: [
-        /*{
-          name: 'id',
-          placeholder: 'id',
-          value: item.id
-        },
-        */
-        {
-          name: 'description',
-          placeholder: 'Descripción',
-          value: item.description
-        },
-        {
-          name: 'priority',
-          placeholder: 'Prioridad',
-          type: 'number',
-          value: item.priority
+      let categories = "";
+      let result;
 
-        },
-        {
-          name: 'status',
-          placeholder: 'Estado',
-          value: item.status
+      this.todoService.getTODOCategories(item)
+          .then(data => {
+              result = data;
+              for (var i = 0; i < result.length; i++) {
+                  categories += result[i].name;
+              }
 
-        },
-          {
-              name: 'created',
-              placeholder: 'Fecha creación',
-              value: moment(item.created).format("DD/MM/YYYY HH:mm:ss")
+              let prompt = this.alertCtrl.create({
+                  title: 'Detalles tarea',
+                  cssClass: 'details-task',
+                  inputs: [
+                      /*{
+                       name: 'id',
+                       placeholder: 'id',
+                       value: item.id
+                       },
+                       */
+                      {
+                          id: 'task-description',
+                          name: 'description',
+                          placeholder: 'Descripción',
+                          value: item.description
+                      },
+                      {
+                          id: 'task-priority',
+                          name: 'priority',
+                          placeholder: 'Prioridad',
+                          type: 'number',
+                          value: item.priority
 
-          }
-      ]
-    });
+                      },
+                      {
+                          id: 'task-status',
+                          name: 'status',
+                          placeholder: 'Estado',
+                          value: item.status
 
-    prompt.present();
+                      },
+                      {
+                          id: 'task-category',
+                          name: 'category',
+                          placeholder: 'Categoría',
+                          value: categories
+                      },
+                      {
+                          id: 'task-created',
+                          name: 'created',
+                          placeholder: 'Fecha creación',
+                          value: moment(item.created).format("DD/MM/YYYY HH:mm:ss")
+
+                      }
+                  ]
+              });
+
+              prompt.present();
+          });
 
   }
 
